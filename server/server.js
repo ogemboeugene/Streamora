@@ -42,9 +42,18 @@ try {
 
 const app = express();
 const server = createServer(app);
+
+// Get allowed origins for Socket.IO
+const getSocketCorsOrigins = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'];
+  }
+  return ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'];
+};
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: getSocketCorsOrigins(),
     methods: ["GET", "POST"]
   }
 });
@@ -54,19 +63,39 @@ const PORT = process.env.PORT || 5000;
 // CORS configuration - Move this BEFORE security middleware
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (like mobile apps, curl, Postman, etc.)
     if (!origin) return callback(null, true);
     
-    // In development, allow all origins
-    if (process.env.NODE_ENV !== 'production') {
+    // Get allowed origins based on environment
+    let allowedOrigins = [];
+    
+    if (process.env.NODE_ENV === 'production') {
+      // In production, use ALLOWED_ORIGINS
+      allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean);
+      console.log('Production CORS origins:', allowedOrigins);
+    } else {
+      // In development, allow localhost and any specified origins
+      allowedOrigins = [
+        'http://localhost:3000',
+        'http://localhost:3001', 
+        'http://127.0.0.1:3000',
+        process.env.FRONTEND_URL
+      ].filter(Boolean);
+      
+      // Also add any ALLOWED_ORIGINS in development
+      if (process.env.ALLOWED_ORIGINS) {
+        allowedOrigins.push(...process.env.ALLOWED_ORIGINS.split(',').filter(Boolean));
+      }
+      console.log('Development CORS origins:', allowedOrigins);
+    }
+    
+    // Check if the origin is allowed
+    if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
     
-    // In production, check allowed origins
-    const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',');
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      return callback(null, true);
-    }
+    // Log the rejected origin for debugging
+    console.log(`CORS: Origin ${origin} not allowed. Allowed origins:`, allowedOrigins);
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
