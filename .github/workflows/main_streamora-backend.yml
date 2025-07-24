@@ -98,3 +98,4 @@ jobs:
           else
             echo "❌ Backend deployment failed!"
             exit 1
+          fi
