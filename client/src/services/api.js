@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://streamora-backend-hfgzcyacdgbbcqes.uaenorth-01.azurewebsites.net/api';
 
 // Create axios instance with default config
 const apiClient = axios.create({
