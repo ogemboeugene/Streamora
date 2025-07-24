@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Streamora - Free streaming platform for movies, TV shows, and live radio" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Preconnect to external domains for better performance -->
+    <link rel="preconnect" href="https://api.themoviedb.org">
+    <link rel="preconnect" href="https://image.tmdb.org">
+    <link rel="preconnect" href="https://www.youtube.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="application-name" content="Streamora">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Streamora">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-config" content="%PUBLIC_URL%/browserconfig.xml">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Streamora - Free Streaming Platform">
+    <meta property="og:description" content="Watch free movies, TV shows, and listen to live radio stations. No subscription required.">
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.jpg">
+    <meta property="og:url" content="https://streamora.com">
+    <meta property="og:site_name" content="Streamora">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Streamora - Free Streaming Platform">
+    <meta property="twitter:description" content="Watch free movies, TV shows, and listen to live radio stations. No subscription required.">
+    <meta property="twitter:image" content="%PUBLIC_URL%/twitter-image.jpg">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <title>Streamora - Free Streaming Platform</title>
+    
+    <!-- Analytics placeholder -->
+    <!-- Google Analytics will be added here in production -->
+    
+    <!-- Cookie consent and GDPR compliance -->
+    <script>
+      // Basic cookie consent functionality
+      window.cookieConsent = {
+        necessary: true,
+        analytics: false,
+        marketing: false
+      };
+    </script>
+  </head>
+  <body class="bg-white dark:bg-dark-900 text-gray-900 dark:text-white">
+    <noscript>
+      <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; z-index: 9999;">
+        <div style="text-align: center; padding: 20px;">
+          <h1>JavaScript Required</h1>
+          <p>Streamora requires JavaScript to be enabled to function properly.</p>
+          <p>Please enable JavaScript in your browser settings and reload the page.</p>
+        </div>
+      </div>
+    </noscript>
+    
+    <!-- Loading Screen -->
+    <div id="initial-loader" class="fixed inset-0 bg-dark-900 flex items-center justify-center z-50">
+      <div class="text-center">
+        <div class="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <h2 class="text-2xl font-bold text-white mb-2">Streamora</h2>
+        <p class="text-gray-400">Loading your streaming experience...</p>
+      </div>
+    </div>
+    
+    <div id="root"></div>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('%PUBLIC_URL%/sw.js')
+            .then(function(registration) {
+              console.log('SW registered: ', registration);
+            })
+            .catch(function(registrationError) {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+    
+    <!-- Remove initial loader when React app loads -->
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          const loader = document.getElementById('initial-loader');
+          if (loader) {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(function() {
+              loader.remove();
+            }, 500);
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>
