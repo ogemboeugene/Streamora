@@ -1,0 +1,123 @@
+name: Full Stack CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.changes.outputs.backend }}
+      frontend: ${{ steps.changes.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            backend:
+              - 'server/**'
+            frontend:
+              - 'client/**'
+
+  test-backend:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: |
+          if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ]; then
+            npx eslint . --ext .js
+          else
+            echo "No ESLint config found, skipping linting"
+          fi
+
+      - name: Run tests
+        run: npm test
+        env:
+          NODE_ENV: test
+
+  test-frontend:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: |
+          if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ]; then
+            npx eslint src --ext .js,.jsx,.ts,.tsx
+          else
+            echo "No ESLint config found, skipping linting"
+          fi
+
+      - name: Run tests
+        run: npm test -- --coverage --passWithNoTests
+        env:
+          CI: true
+
+      - name: Build check
+        run: npm run build
+        env:
+          CI: false
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
