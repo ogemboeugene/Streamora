@@ -66,7 +66,6 @@ jobs:
 
       - name: Create production build
         run: |
-          # Copy necessary files for production
           mkdir -p ./dist
           cp -r ./models ./dist/
           cp -r ./routes ./dist/
@@ -75,10 +74,13 @@ jobs:
           cp ./server.js ./dist/
           cp ./package.json ./dist/
           cp ./package-lock.json ./dist/
-          
-          # Install production dependencies in dist folder
           cd ./dist
           npm ci --only=production
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_BACKEND_CREDENTIALS }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
@@ -87,6 +89,7 @@ jobs:
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
           package: './server/dist'
+
 
   notify:
     needs: [test, build-and-deploy]
