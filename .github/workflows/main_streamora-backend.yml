@@ -7,7 +7,7 @@ on:
       - master
     paths:
       - 'server/**'
-      - '.github/workflows/deploy-backend.yml'
+      - '.github/workflows/main_streamora-backend.yml'
   pull_request:
     branches:
       - main
