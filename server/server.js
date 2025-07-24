@@ -42,18 +42,9 @@ try {
 
 const app = express();
 const server = createServer(app);
-
-// Get allowed origins for Socket.IO
-const getSocketCorsOrigins = () => {
-  if (process.env.NODE_ENV === 'production') {
-    return process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'];
-  }
-  return ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'];
-};
-
 const io = new Server(server, {
   cors: {
-    origin: getSocketCorsOrigins(),
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
     methods: ["GET", "POST"]
   }
 });
@@ -70,8 +61,9 @@ const corsOptions = {
     let allowedOrigins = [];
     
     if (process.env.NODE_ENV === 'production') {
-      // In production, use ALLOWED_ORIGINS
-      allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').filter(Boolean);
+      // In production, use ALLOWED_ORIGINS or CORS_ORIGIN
+      const corsOrigins = process.env.ALLOWED_ORIGINS || process.env.CORS_ORIGIN || '';
+      allowedOrigins = corsOrigins.split(',').filter(Boolean);
       console.log('Production CORS origins:', allowedOrigins);
     } else {
       // In development, allow localhost and any specified origins
@@ -82,9 +74,10 @@ const corsOptions = {
         process.env.FRONTEND_URL
       ].filter(Boolean);
       
-      // Also add any ALLOWED_ORIGINS in development
-      if (process.env.ALLOWED_ORIGINS) {
-        allowedOrigins.push(...process.env.ALLOWED_ORIGINS.split(',').filter(Boolean));
+      // Also add any ALLOWED_ORIGINS or CORS_ORIGIN in development
+      const corsOrigins = process.env.ALLOWED_ORIGINS || process.env.CORS_ORIGIN || '';
+      if (corsOrigins) {
+        allowedOrigins.push(...corsOrigins.split(',').filter(Boolean));
       }
       console.log('Development CORS origins:', allowedOrigins);
     }
