@@ -19,7 +19,7 @@ const CustomLists = () => {
     if (user) {
       loadUserData();
     }
-  }, [user]);
+  }, [user, loadUserData]);
 
   const handleCreateList = async (e) => {
     e.preventDefault();

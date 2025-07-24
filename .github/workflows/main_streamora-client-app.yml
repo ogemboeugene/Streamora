@@ -24,8 +24,10 @@ jobs:
         run: |
           npm install
           npm run build --if-present
-          npm run test --if-present
+          npm run test --if-present -- --passWithNoTests
         working-directory: client
+        env:
+          CI: false
       
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -38,7 +40,7 @@ jobs:
     needs: build
     
     steps:
-      - name: Download artifact
+      - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: node-app

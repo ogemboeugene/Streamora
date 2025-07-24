@@ -14,7 +14,7 @@ const Favorites = () => {
     if (user) {
       loadUserData();
     }
-  }, [user]);
+  }, [user, loadUserData]);
 
   if (!user) {
     return (

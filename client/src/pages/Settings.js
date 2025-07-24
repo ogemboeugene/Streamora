@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Layout from '../components/Layout/Layout';
-import LoadingSpinner from '../components/UI/LoadingSpinner';
+// import LoadingSpinner from '../components/UI/LoadingSpinner'; // Commented out unused import
 import { useAuth } from '../contexts/AuthContext';
 import { useUserData } from '../contexts/UserDataContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -11,7 +11,8 @@ import { userAPI } from '../services/api';
 const Settings = () => {
   const { user, updateProfile } = useAuth();
   const { theme, setTheme } = useTheme();
-  const { userStats, refreshStats } = useUserData();
+  const { userStats } = useUserData(); // Removed refreshStats as it's unused
+  // const { userStats, refreshStats } = useUserData(); // Original line commented
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({

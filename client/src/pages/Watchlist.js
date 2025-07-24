@@ -14,7 +14,7 @@ const Watchlist = () => {
     if (user) {
       loadUserData();
     }
-  }, [user]);
+  }, [user, loadUserData]);
 
   if (!user) {
     return (

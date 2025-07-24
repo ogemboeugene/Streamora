@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { userAPI } from '../services/api';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-hot-toast';
@@ -71,7 +71,7 @@ export const UserDataProvider = ({ children }) => {
     } else {
       clearUserData();
     }
-  }, [user]);
+  }, [user, loadUserData]);
 
   const clearUserData = () => {
     setWatchlist([]);
@@ -82,7 +82,7 @@ export const UserDataProvider = ({ children }) => {
     setUserStats(null);
   };
 
-  const loadUserData = async () => {
+  const loadUserData = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -116,7 +116,7 @@ export const UserDataProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user]);
 
   // ========== WATCHLIST FUNCTIONS ==========
 

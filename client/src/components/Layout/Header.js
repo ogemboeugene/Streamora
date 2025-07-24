@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Menu, X, User, LogOut, Settings, Heart, Clock, Film, Radio, Home, Star, Bookmark, List } from 'lucide-react';
+import { Search, Menu, X, User, LogOut, Settings, Heart, Clock, Film, Radio, Home, Bookmark, List } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 

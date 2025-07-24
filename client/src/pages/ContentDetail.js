@@ -9,8 +9,7 @@ import {
   Calendar, 
   Clock, 
   BookmarkPlus,
-  ExternalLink,
-  Database
+  ExternalLink
 } from 'lucide-react';
 import Layout from '../components/Layout/Layout';
 import SEOHead from '../components/UI/SEOHead';

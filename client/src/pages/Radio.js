@@ -296,8 +296,9 @@ const Radio = () => {
   const [featuredStations, setFeaturedStations] = useState([]);
   const [genres, setGenres] = useState([]);
   const [currentStationIndex, setCurrentStationIndex] = useState(0);
-  const [playHistory, setPlayHistory] = useState([]);
-  const [volume, setVolume] = useState(100);
+  // Commented out unused variables to fix build
+  // const [playHistory, setPlayHistory] = useState([]);
+  // const [volume, setVolume] = useState(100);
 
   // Get current station from currentTrack
   const currentStation = currentTrack?.station || null;
@@ -460,14 +461,15 @@ const Radio = () => {
     handlePreviousStation();
   };
 
-  const handleVolumeChange = (newVolume) => {
-    setVolume(newVolume);
-    // You would implement actual volume control in your player context
-  };
+  // Commented out unused functions to fix build
+  // const handleVolumeChange = (newVolume) => {
+  //   setVolume(newVolume);
+  //   // You would implement actual volume control in your player context
+  // };
 
-  const handleStop = () => {
-    pause();
-  };
+  // const handleStop = () => {
+  //   pause();
+  // };
 
   const isStationPlaying = (station) => {
     const stationId = station.stationuuid || station.id;

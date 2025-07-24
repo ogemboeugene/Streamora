@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Filter, Grid, List, Star, Calendar, Play } from 'lucide-react';
+import { Filter, Grid, List } from 'lucide-react';
 import Layout from '../components/Layout/Layout';
 import SEOHead from '../components/UI/SEOHead';
 import { MovieGrid } from '../components/Content/MovieCard';
@@ -45,7 +45,7 @@ const Movies = () => {
 
   useEffect(() => {
     fetchMovies();
-  }, [filters]);
+  }, [filters, fetchMovies]);
 
   const fetchGenres = async () => {
     try {
@@ -56,7 +56,7 @@ const Movies = () => {
     }
   };
 
-  const fetchMovies = async () => {
+  const fetchMovies = useCallback(async () => {
     setLoading(true);
     setError(null);
     
@@ -70,7 +70,7 @@ const Movies = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
 
   const updateFilters = (newFilters) => {
     const updatedFilters = { ...filters, ...newFilters, page: 1 };
