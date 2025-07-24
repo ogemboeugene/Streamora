@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy Node.js app to Azure Web App - streamora-client-app
 
 on:
@@ -13,7 +10,7 @@ jobs:
   build:
     runs-on: windows-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read # This is required for actions/checkout
 
     steps:
       - uses: actions/checkout@v4
@@ -28,22 +25,24 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
+        working-directory: client
       
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: client/build
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     
     steps:
-      - name: Download artifact from build job
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: node-app
+          path: ./deploy
       
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -51,5 +50,5 @@ jobs:
         with:
           app-name: 'streamora-client-app'
           slot-name: 'Production'
-          package: .
+          package: ./deploy
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A5D56A314C064F5489D9FFC6F58FC077 }}
