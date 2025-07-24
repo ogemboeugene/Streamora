@@ -39,14 +39,6 @@ const Movies = () => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
 
-  useEffect(() => {
-    fetchGenres();
-  }, []);
-
-  useEffect(() => {
-    fetchMovies();
-  }, [filters, fetchMovies]);
-
   const fetchGenres = async () => {
     try {
       const response = await contentAPI.getGenres('movie');
@@ -71,6 +63,14 @@ const Movies = () => {
       setLoading(false);
     }
   }, [filters]);
+
+  useEffect(() => {
+    fetchGenres();
+  }, []);
+
+  useEffect(() => {
+    fetchMovies();
+  }, [filters, fetchMovies]);
 
   const updateFilters = (newFilters) => {
     const updatedFilters = { ...filters, ...newFilters, page: 1 };

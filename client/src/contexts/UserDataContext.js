@@ -64,15 +64,6 @@ export const UserDataProvider = ({ children }) => {
   const [userStats, setUserStats] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load user data when user logs in
-  useEffect(() => {
-    if (user) {
-      loadUserData();
-    } else {
-      clearUserData();
-    }
-  }, [user, loadUserData]);
-
   const clearUserData = () => {
     setWatchlist([]);
     setFavorites([]);
@@ -101,7 +92,7 @@ export const UserDataProvider = ({ children }) => {
         userAPI.getFavorites(),
         userAPI.getRatings(),
         userAPI.getCustomLists(),
-        userAPI.getWatchHistory({ limit: 50 }),
+        userAPI.getWatchHistory(),
         userAPI.getUserStats()
       ]);
 
@@ -117,6 +108,15 @@ export const UserDataProvider = ({ children }) => {
       setIsLoading(false);
     }
   }, [user]);
+
+  // Load user data when user logs in
+  useEffect(() => {
+    if (user) {
+      loadUserData();
+    } else {
+      clearUserData();
+    }
+  }, [user, loadUserData]);
 
   // ========== WATCHLIST FUNCTIONS ==========
 
@@ -560,4 +560,4 @@ export const UserDataProvider = ({ children }) => {
   );
 };
 
-export default UserDataContext;
+export default UserDataProvider;

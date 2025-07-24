@@ -396,10 +396,10 @@ const Radio = () => {
         }
         
         // Add to play history
-        setPlayHistory(prev => {
-          const newHistory = [station, ...prev.filter(s => (s.stationuuid || s.id) !== stationId)];
-          return newHistory.slice(0, 10); // Keep last 10 stations
-        });
+        // setPlayHistory(prev => {
+        //   const newHistory = [station, ...prev.filter(s => (s.stationuuid || s.id) !== stationId)];
+        //   return newHistory.slice(0, 10); // Keep last 10 stations
+        // });
 
         // Load content into player and play
         const content = {

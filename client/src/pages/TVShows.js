@@ -39,14 +39,6 @@ const TVShows = () => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
 
-  useEffect(() => {
-    fetchGenres();
-  }, []);
-
-  useEffect(() => {
-    fetchShows();
-  }, [filters, fetchShows]);
-
   const fetchGenres = async () => {
     try {
       const response = await contentAPI.getGenres('tv');
@@ -71,6 +63,14 @@ const TVShows = () => {
       setLoading(false);
     }
   }, [filters]);
+
+  useEffect(() => {
+    fetchGenres();
+  }, []);
+
+  useEffect(() => {
+    fetchShows();
+  }, [filters, fetchShows]);
 
   const updateFilters = (newFilters) => {
     const updatedFilters = { ...filters, ...newFilters, page: 1 };
