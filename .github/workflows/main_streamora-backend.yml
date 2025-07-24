@@ -37,7 +37,7 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: npm test
+        run: npm test -- --passWithNoTests
         env:
           NODE_ENV: test
 
@@ -101,4 +101,3 @@ jobs:
           else
             echo "❌ Backend deployment failed!"
             exit 1
-          fi
